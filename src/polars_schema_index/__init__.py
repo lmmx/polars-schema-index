@@ -1,6 +1,6 @@
 import polars as pl
 import polars.selectors as cs
-import polars_permute
+import polars_permute  # noqa: F401
 from polars.api import register_dataframe_namespace
 
 try:
@@ -120,7 +120,9 @@ class SchemaIndexPlugin:
         }
 
     def rename_new_columns_with_gaps(
-        self, data: pl.LazyFrame | pl.DataFrame, suffix_pattern: str = r"_(\d+)$"
+        self,
+        data: pl.LazyFrame | pl.DataFrame,
+        suffix_pattern: str = r"_(\d+)$",
     ):
         """
         Rename any columns that do not already end with digits to have
@@ -146,7 +148,9 @@ class SchemaIndexPlugin:
 
 @snoop()
 def flatten_nested_data(
-    df: pl.DataFrame | pl.LazyFrame, explode_lists: bool = True, max_passes: int = 1000
+    df: pl.DataFrame | pl.LazyFrame,
+    explode_lists: bool = True,
+    max_passes: int = 1000,
 ) -> pl.DataFrame | pl.LazyFrame:
     """
     Iteratively flatten all nested columns (structs) in `df`. If `explode_lists=True`,

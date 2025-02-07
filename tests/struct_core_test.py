@@ -13,7 +13,7 @@ def test_basic_struct_flatten():
                 {"foo": 10, "bar": 100},
                 {"foo": 20, "bar": 200},
             ],
-        }
+        },
     )
     result = flatten_nested_data(df)
 
@@ -35,7 +35,7 @@ def test_basic_struct_flatten():
 def test_multi_level_struct():
     """Test flattening a multi-level nested struct."""
     df = pl.DataFrame(
-        {"level1": [{"x": 1, "level_two": {"y": 10, "level_three": {"z": 100}}}]}
+        {"level1": [{"x": 1, "level_two": {"y": 10, "level_three": {"z": 100}}}]},
     )
     result = flatten_nested_data(df)
     # Should expand out all nested levels
@@ -61,9 +61,9 @@ def test_list_of_structs():
                 [
                     {"event": "login", "timestamp": 1000},
                     {"event": "logout", "timestamp": 2000},
-                ]
+                ],
             ],
-        }
+        },
     )
     result = flatten_nested_data(df, explode_lists=True)
     # We started with 1 row, but exploding the list of 2 events -> 2 rows
@@ -98,7 +98,7 @@ def test_flatten_lazyframe():
                 {"key": "alpha", "val": 10},
                 {"key": "beta", "val": 20},
             ],
-        }
+        },
     ).lazy()
     # Flatten
     result_lf = flatten_nested_data(lf)
