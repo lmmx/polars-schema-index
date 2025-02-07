@@ -1,16 +1,11 @@
+from __future__ import annotations
+
+import os
+
 import polars as pl
 import polars.selectors as cs
 import polars_permute  # noqa: F401
 from polars.api import register_dataframe_namespace
-
-try:
-    from pysnooper import snoop
-except ImportError:
-
-    def snoop(func):
-        """No-op decorator if pysnooper is not available"""
-        return func
-
 
 __all__ = ("flatten_nested_data",)
 
@@ -102,7 +97,6 @@ class SchemaIndexPlugin:
     # 5) Build flat_index for unnumbered columns
     # ----------------------------------------------------------------------
     @property
-    @snoop()
     def flat_index(self) -> dict[str, str]:
         """
         Map each unnumbered column name to a suffix-appended name,
@@ -146,7 +140,6 @@ class SchemaIndexPlugin:
         return self.rename_new_columns_with_gaps(appended_and_unnested)
 
 
-@snoop()
 def flatten_nested_data(
     df: pl.DataFrame | pl.LazyFrame,
     explode_lists: bool = True,
