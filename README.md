@@ -11,16 +11,14 @@
 ## Installation
 
 ```bash
-pip install polars-schema-index
+pip install polars-schema-index[polars]
 ```
 
-You’ll also need Polars itself. If you don’t already have it:
+On older CPUs run:
 
-```bash
-pip install polars
+```python
+pip install polars-schema-index[polars-lts-cpu]
 ```
-
-*(Or use the Polars variant for older CPUs, `polars[lts-cpu]`.)*
 
 ## Usage
 
