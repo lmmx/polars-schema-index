@@ -1,109 +1,98 @@
-# Polars Permute Plugin
+# polars-schema-index
 
-A Polars plugin for easily reordering DataFrame columns.
+**A Polars plugin for flattening nested columns with stable numeric indexing.**
 
-Supports column permutations like prepending, appending, shifting, and swapping.
+`polars-schema-index` provides a systematic way to explode/unnest nested Polars DataFrames (does not yet support LazyFrames) without overwriting columns that share the same name. It achieves this by:
+
+- Attaching a custom `schema_index` namespace to your DataFrame.  
+- Renaming columns that do not end in digits with a numbered suffix.  
+- Iteratively flattening `Struct` columns (and optionally exploding `list[struct]` columns first), so every nested field becomes a separate top-level column.  
 
 ## Installation
 
-```python
-pip install polars-permute[polars]
+```bash
+pip install polars-schema-index
 ```
 
-On older CPUs run:
+You’ll also need Polars itself. If you don’t already have it:
 
-```python
-pip install polars-permute[polars-lts-cpu]
+```bash
+pip install polars
 ```
 
-## Features
-
-- Supports both string column names and Polars expressions
-- Handles single or multiple columns
-- Maintains relative ordering of moved columns
-- Chain operations together
-- Gracefully handles edge cases (non-existent columns, empty inputs)
+*(Or use the Polars variant for older CPUs, `polars[lts-cpu]`.)*
 
 ## Usage
 
-The plugin adds a `permute` namespace to Polars DataFrames with methods for column reordering:
-
 ```python
 import polars as pl
-import polars_permute
+from polars_schema_index import flatten_nested_data
 
-# Create a sample DataFrame
-df = pl.DataFrame({
-    "a": [1, 2, 3],
-    "b": [4, 5, 6],
-    "c": [7, 8, 9],
-    "d": [10, 11, 12]
-})
-
-# Move column 'd' to the start
-df.permute.prepend("d")
-
-# Move multiple columns to the end
-df.permute.append(["a", "b"])
-
-# Move columns to a specific position
-df.permute.at(["b", "c"], index=0)
-
-# Shift columns left/right
-df.permute.shift("a", "b", steps=1, direction="right")
-
-# Swap two columns
-df.permute.swap("a", "d")
+# Example: flatten a deeply nested JSON structure
+df = pl.read_ndjson(
+    source=b'''{
+        "body": [
+            {
+                "type": "If",
+                "test": {
+                    "type": "Compare",
+                    "left": {
+                        "type": "Name",
+                        "id": "x",
+                        "ctx": { "type": "Load" }
+                    },
+                    "ops": [{ "type": "IsNot" }],
+                    "comparators": [{ "type": "Constant", "value": null }]
+                },
+                "body": [{ "type": "Pass" }],
+                "orelse": []
+            }
+        ],
+        "type_ignores": []
+    }
+    '''.replace(b"\n", b"")
+)
+flattened = flatten_nested_data(df)
+print(flattened)
 ```
 
-## API Reference
+This gives a DataFrame with all nested fields expanded into uniquely suffixed, monotonically
+increasing numbered columns:
 
-### prepend(cols)
-Move specified column(s) to the start (index 0).
 ```python
-df.permute.prepend("d")  # Single column
-df.permute.prepend(["c", "d"])  # Multiple columns
-df.permute.prepend(pl.col("a").alias("x"))  # Using expressions
+┌────────────────┬────────┬────────────┬─────────┬───┬─────────┬──────────┬──────────┬─────────┐
+│ type_ignores_1 ┆ type_2 ┆ orelse_5   ┆ type_6  ┆ … ┆ type_14 ┆ type_15  ┆ value_16 ┆ type_17 │
+│ ---            ┆ ---    ┆ ---        ┆ ---     ┆   ┆ ---     ┆ ---      ┆ ---      ┆ ---     │
+│ list[null]     ┆ str    ┆ list[null] ┆ str     ┆   ┆ str     ┆ str      ┆ null     ┆ str     │
+╞════════════════╪════════╪════════════╪═════════╪═══╪═════════╪══════════╪══════════╪═════════╡
+│ []             ┆ If     ┆ []         ┆ Compare ┆ … ┆ IsNot   ┆ Constant ┆ null     ┆ Load    │
+└────────────────┴────────┴────────────┴─────────┴───┴─────────┴──────────┴──────────┴─────────┘
 ```
 
-### append(cols)
-Move specified column(s) to the end.
-```python
-df.permute.append("a")
-df.permute.append(["a", "b"])
-```
+### What It Solves
 
-### at(cols, index)
-Move specified column(s) to exact position.
-```python
-df.permute.at("d", 1)  # Move 'd' to index 1
-df.permute.at(["b", "c"], 0)  # Move multiple columns
-```
+- **No more silent overwrites** of common keys (like `"type"`) when unnesting.  
+- **Stable numeric suffixes** for each column, so even if you run multiple flatten passes, names remain unique.  
+- **Optional exploding of list-of-struct columns** before flattening them.
 
-### shift(cols, steps=1, direction="left")
-Shift column(s) left or right by steps.
-```python
-df.permute.shift("c", steps=1, direction="left")
-df.permute.shift("a", "b", steps=2, direction="right")
-```
+### Key Functions
 
-### swap(col1, col2)
-Swap positions of two columns.
-```python
-df.permute.swap("a", "d")
-```
+1. **`flatten_nested_data(df, explode_lists=True, max_passes=1000)`**  
+   Iteratively flattens all `Struct` columns in a DataFrame or LazyFrame, and explodes any `list[struct]` columns (if `explode_lists=True`). Continues until no `Struct` columns remain (or `max_passes` is reached).
 
-## Notes
+2. **`df.schema_index.append_unnest_relabel(df, column=...)`**  
+   Moves one column to the end via `.permute`, unnest it, then relabel newly created columns with numeric suffixes.
 
-- Operations create a new DataFrame; the original is not modified
-- Column order is preserved for multiple column operations
-- Invalid columns are ignored gracefully
-- Out-of-bounds indexes are clamped to valid range
+### Note
+
+- **Column Renaming**: The library appends numeric suffixes to *all columns* that lack them, even if they are already scalar columns. That ensures flattening never creates collisions, but it does mean your top-level columns will also gain suffixes.  
+- **LazyFrame Support**: By default, the plugin is registered for `DataFrame`. If you want to use this on LazyFrames, you can register a similar namespace for `LazyFrame` or manually attach the plugin’s logic. I may end up supporting both.
 
 ## Contributing
 
-Feel free to open issues or submit pull requests for improvements or bug fixes.
+1. **Issues & Discussions**: Please open a GitHub issue for bugs, feature requests, or questions.  
+2. **Pull Requests**: PRs are welcome! Add tests under `tests/`, update the docs, and ensure you run `pytest` locally.  
 
 ## License
 
-MIT License
+This project is licensed under the MIT License.
