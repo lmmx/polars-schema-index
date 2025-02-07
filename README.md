@@ -4,9 +4,9 @@
 
 `polars-schema-index` provides a systematic way to explode/unnest nested Polars DataFrames (does not yet support LazyFrames) without overwriting columns that share the same name. It achieves this by:
 
-- Attaching a custom `schema_index` namespace to your DataFrame.  
-- Renaming columns that do not end in digits with a numbered suffix.  
-- Iteratively flattening `Struct` columns (and optionally exploding `list[struct]` columns first), so every nested field becomes a separate top-level column.  
+- Attaching a custom `schema_index` namespace to your DataFrame.
+- Renaming columns that do not end in digits with a numbered suffix.
+- Iteratively flattening `Struct` columns (and optionally exploding `list[struct]` columns first), so every nested field becomes a separate top-level column.
 
 ## Installation
 
@@ -69,27 +69,27 @@ increasing numbered columns:
 
 ### What It Solves
 
-- **No more silent overwrites** of common keys (like `"type"`) when unnesting.  
-- **Stable numeric suffixes** for each column, so even if you run multiple flatten passes, names remain unique.  
+- **No more silent overwrites** of common keys (like `"type"`) when unnesting.
+- **Stable numeric suffixes** for each column, so even if you run multiple flatten passes, names remain unique.
 - **Optional exploding of list-of-struct columns** before flattening them.
 
 ### Key Functions
 
-1. **`flatten_nested_data(df, explode_lists=True, max_passes=1000)`**  
+1. **`flatten_nested_data(df, explode_lists=True, max_passes=1000)`**
    Iteratively flattens all `Struct` columns in a DataFrame or LazyFrame, and explodes any `list[struct]` columns (if `explode_lists=True`). Continues until no `Struct` columns remain (or `max_passes` is reached).
 
-2. **`df.schema_index.append_unnest_relabel(df, column=...)`**  
+2. **`df.schema_index.append_unnest_relabel(df, column=...)`**
    Moves one column to the end via `.permute`, unnest it, then relabel newly created columns with numeric suffixes.
 
 ### Note
 
-- **Column Renaming**: The library appends numeric suffixes to *all columns* that lack them, even if they are already scalar columns. That ensures flattening never creates collisions, but it does mean your top-level columns will also gain suffixes.  
+- **Column Renaming**: The library appends numeric suffixes to *all columns* that lack them, even if they are already scalar columns. That ensures flattening never creates collisions, but it does mean your top-level columns will also gain suffixes.
 - **LazyFrame Support**: By default, the plugin is registered for `DataFrame`. If you want to use this on LazyFrames, you can register a similar namespace for `LazyFrame` or manually attach the plugin’s logic. I may end up supporting both.
 
 ## Contributing
 
-1. **Issues & Discussions**: Please open a GitHub issue for bugs, feature requests, or questions.  
-2. **Pull Requests**: PRs are welcome! Add tests under `tests/`, update the docs, and ensure you run `pytest` locally.  
+1. **Issues & Discussions**: Please open a GitHub issue for bugs, feature requests, or questions.
+2. **Pull Requests**: PRs are welcome! Add tests under `tests/`, update the docs, and ensure you run `pytest` locally.
 
 ## License
 
