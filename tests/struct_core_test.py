@@ -47,9 +47,9 @@ def test_multi_level_struct():
     # The precise column names will vary depending on suffix assignment,
     # but we expect the values 1, 10, and 100 in separate columns.
     vals = list(row.values())
-    assert (
-        1 in vals and 10 in vals and 100 in vals
-    ), "Missing data from multi-level flatten"
+    assert 1 in vals and 10 in vals and 100 in vals, (
+        "Missing data from multi-level flatten"
+    )
 
 
 def test_list_of_structs():
@@ -81,9 +81,9 @@ def test_no_struct_columns():
     """Test a DataFrame with no struct columns (no change expected)."""
     df = pl.DataFrame({"x": [1, 2], "y": [3, 4]})
     result = flatten_nested_data(df)
-    assert (
-        result.shape == df.shape
-    ), "Shape should remain unchanged with no struct columns"
+    assert result.shape == df.shape, (
+        "Shape should remain unchanged with no struct columns"
+    )
     assert result.columns == ["x_0", "y_1"]
     assert result.to_dicts() == [{"x_0": 1, "y_1": 3}, {"x_0": 2, "y_1": 4}]
 
@@ -157,6 +157,6 @@ def test_deep_ast_example():
     # Check presence of 'Pass', 'If', 'Compare', etc. in the data
     row_data = str(flattened.to_dicts()[0])
     for expected_val in ["If", "Compare", "Name", "IsNot", "Pass", "Constant"]:
-        assert (
-            expected_val in row_data
-        ), f"Missing '{expected_val}' from flattened AST data"
+        assert expected_val in row_data, (
+            f"Missing '{expected_val}' from flattened AST data"
+        )
