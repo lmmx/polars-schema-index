@@ -130,16 +130,16 @@ wheels = [
 
 [[package]]
 name = "polars-permute"
-version = "0.1.0"
+version = "0.1.2"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/44/ea/7e84a6c713204ee77b5fa6e98009990be81566f9e33a2eb0acf45685023a/polars_permute-0.1.0.tar.gz", hash = "sha256:4795458e83a1fd98cc3173948059f0d6eeed54d0bacbb060193f8c8156889ccc", size = 5036 }
+sdist = { url = "https://files.pythonhosted.org/packages/32/e7/c6119b612f8025be6d26fedfcd4c4baf20201abbfc9c76e2f444908e4b19/polars_permute-0.1.2.tar.gz", hash = "sha256:18c79b3153c2e64149dc86dac5218a0bf7ad36361750e0c2191c1dd5724fa5bf", size = 5374 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cd/2e/07677c7f12209c19e19dd98b86d751aec373da3d84dfd35cd514c2637b49/polars_permute-0.1.0-py3-none-any.whl", hash = "sha256:940210cc899c110cd449f360dd26c4e5400061b26582a501c2495a298cdfdabf", size = 3641 },
+    { url = "https://files.pythonhosted.org/packages/fe/77/2a9039ba82ed2c46384f2576570b7c6bc1f524a0b4bcfd795da42649b76a/polars_permute-0.1.2-py3-none-any.whl", hash = "sha256:680b8bdfd435c1ba961a0b0b6b3e9e3b957f66efe7b96d49ad6f9955efdbee3f", size = 3853 },
 ]
 
 [[package]]
 name = "polars-schema-index"
-version = "0.1.0"
+version = "0.1.2"
 source = { editable = "." }
 dependencies = [
     { name = "polars-permute" },
@@ -161,7 +161,7 @@ polars-lts-cpu = [
 requires-dist = [
     { name = "polars", marker = "extra == 'polars'", specifier = ">=1.21.0" },
     { name = "polars-lts-cpu", marker = "extra == 'polars-lts-cpu'", specifier = ">=1.21.0" },
-    { name = "polars-permute", specifier = ">=0.1.0" },
+    { name = "polars-permute", specifier = ">=0.1.2" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.1.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.4" },
 ]
