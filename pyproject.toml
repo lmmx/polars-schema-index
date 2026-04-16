@@ -4,7 +4,8 @@ requires = ["uv_build>=0.11.6,<0.12"]
 
 [dependency-groups]
 dev = [
-  "pytest>=8.3.4"
+  "pdbpp>=0.12.1",
+  "pytest>=8.3.4",
 ]
 test = [
     "pytest>=8.3.4",
