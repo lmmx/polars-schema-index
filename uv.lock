@@ -3,7 +3,7 @@ revision = 3
 requires-python = ">=3.10"
 
 [options]
-exclude-newer = "2026-04-13T12:01:08.200982935Z"
+exclude-newer = "2026-04-13T12:06:18.691499915Z"
 exclude-newer-span = "P3D"
 
 [[package]]
@@ -137,7 +137,7 @@ wheels = [
 
 [[package]]
 name = "polars-schema-index"
-version = "0.1.2"
+version = "0.1.3"
 source = { editable = "." }
 dependencies = [
     { name = "polars" },
