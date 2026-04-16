@@ -1,7 +1,10 @@
 [build-system]
-build-backend = "pdm.backend"
-requires = [
-  "pdm-backend"
+build-backend = "uv_build"
+requires = ["uv_build>=0.11.6,<0.12"]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3.4"
 ]
 
 [project]
@@ -12,8 +15,9 @@ readme = "README.md"
 authors = [
   {name = "Louis Maddox", email = "louismmx@gmail.com"}
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
+  "polars>=1.36.0",
   "polars-permute>=0.1.2"
 ]
 classifiers = [
@@ -25,7 +29,6 @@ classifiers = [
   "Programming Language :: Python",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -33,17 +36,11 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-polars = [
-  "polars>=1.21.0"
-]
-polars-lts-cpu = [
-  "polars-lts-cpu>=1.21.0"
-]
-dev = [
-  "pre-commit>=4.1.0",
-  "pytest>=8.3.4"
-]
+lts-cpu = ["polars[rtcompat]>=1.36"]
 
 [project.urls]
 Homepage = "https://github.com/lmmx/polars-schema-index"
 Repository = "https://github.com/lmmx/polars-schema-index.git"
+
+[tool.uv]
+default-groups = "all"
