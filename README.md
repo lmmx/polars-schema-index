@@ -1,11 +1,11 @@
 # polars-schema-index
 
-<!-- [![downloads](https://static.pepy.tech/badge/polars-diskcache/month)](https://pepy.tech/project/polars-diskcache) -->
+<!-- [![downloads](https://static.pepy.tech/badge/polars-schema-index/month)](https://pepy.tech/project/polars-schema-index) -->
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
-[![PyPI](https://img.shields.io/pypi/v/polars-diskcache.svg)](https://pypi.org/project/polars-diskcache)
-[![Supported Python versions](https://img.shields.io/pypi/pyversions/polars-diskcache.svg)](https://pypi.org/project/polars-diskcache)
-[![License](https://img.shields.io/pypi/l/polars-diskcache.svg)](https://pypi.python.org/pypi/polars-diskcache)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/lmmx/polars-diskcache/master.svg)](https://results.pre-commit.ci/latest/github/lmmx/polars-diskcache/master)
+[![PyPI](https://img.shields.io/pypi/v/polars-schema-index.svg)](https://pypi.org/project/polars-schema-index)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/polars-schema-index.svg)](https://pypi.org/project/polars-schema-index)
+[![License](https://img.shields.io/pypi/l/polars-schema-index.svg)](https://pypi.python.org/pypi/polars-schema-index)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/lmmx/polars-schema-index/master.svg)](https://results.pre-commit.ci/latest/github/lmmx/polars-schema-index/master)
 
 **A Polars plugin for flattening nested columns with stable numeric indexing.**
 
