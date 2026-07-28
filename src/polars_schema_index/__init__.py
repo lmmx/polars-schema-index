@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-
 import polars as pl
 import polars.selectors as cs
 import polars_permute  # noqa: F401
