@@ -35,7 +35,7 @@ from polars_schema_index import flatten_nested_data
 
 # Example: flatten a deeply nested JSON structure
 df = pl.read_ndjson(
-    source=b'''{
+    source=b"""{
         "body": [
             {
                 "type": "If",
@@ -55,7 +55,7 @@ df = pl.read_ndjson(
         ],
         "type_ignores": []
     }
-    '''.replace(b"\n", b"")
+    """.replace(b"\n", b"")
 )
 flattened = flatten_nested_data(df)
 print(flattened)
